@@ -9,6 +9,8 @@ export default function Home() {
 
       <Hero />
 
+      <Demo />
+
       <HowItWorks />
 
       <Features />
@@ -138,6 +140,277 @@ function HeroCard() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+type DemoCard = {
+  source: "Todoist" | "Gmail" | "Calendar";
+  sourceColor: string;
+  score: number;
+  title: string;
+  body: string;
+  chips: { label: string; color: string }[];
+  swipe: "right" | "left" | "down" | "up";
+};
+
+const DEMO_CARDS: DemoCard[] = [
+  {
+    source: "Todoist",
+    sourceColor: "#F47D31",
+    score: 94,
+    title: "Finish Q2 onboarding deck",
+    body: "Due today. 2h free on your calendar after lunch.",
+    chips: [
+      { label: "urgent", color: "#7B61FF" },
+      { label: "deep focus", color: "#A855F7" },
+    ],
+    swipe: "right",
+  },
+  {
+    source: "Gmail",
+    sourceColor: "#FF6B6B",
+    score: 72,
+    title: "Re: dinner Tuesday?",
+    body: "Lena Ross — waiting on your reply since Friday.",
+    chips: [
+      { label: "reply needed", color: "#FF6B6B" },
+      { label: "personal", color: "#00D1C1" },
+    ],
+    swipe: "left",
+  },
+  {
+    source: "Calendar",
+    sourceColor: "#00D1C1",
+    score: 61,
+    title: "Team standup — 10:00",
+    body: "Just finished. Mark done to clear from today.",
+    chips: [
+      { label: "recurring", color: "#00D1C1" },
+      { label: "15 min", color: "#6A6A7A" },
+    ],
+    swipe: "down",
+  },
+  {
+    source: "Todoist",
+    sourceColor: "#F47D31",
+    score: 18,
+    title: "Tidy old pinned notes",
+    body: "Added 3 months ago. Never touched. Still matters?",
+    chips: [
+      { label: "stale", color: "#6A6A7A" },
+      { label: "low effort", color: "#A855F7" },
+    ],
+    swipe: "up",
+  },
+];
+
+const SWIPE_META = {
+  right: { label: "Do now", color: "#00D1C1", anim: "swipe-right", hintAnim: "hint-right", glowAnim: "glow-right" },
+  left:  { label: "Later",  color: "#F47D31", anim: "swipe-left",  hintAnim: "hint-left",  glowAnim: "glow-left"  },
+  down:  { label: "Done",   color: "#7B61FF", anim: "swipe-down",  hintAnim: "hint-down",  glowAnim: "glow-down"  },
+  up:    { label: "Delete", color: "#FF6B6B", anim: "swipe-up",    hintAnim: "hint-up",    glowAnim: "glow-up"    },
+} as const;
+
+function Demo() {
+  return (
+    <section className="relative z-10 mx-auto max-w-6xl px-6 py-24">
+      <div className="grid grid-cols-1 items-center gap-16 md:grid-cols-[1fr_auto]">
+        <div>
+          <SectionLabel>Watch it work</SectionLabel>
+          <h2 className="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight md:text-5xl">
+            Four swipes.
+            <br />
+            <span className="bg-gradient-to-r from-[#7B61FF] to-[#00D1C1] bg-clip-text text-transparent">
+              Inbox zero-ish.
+            </span>
+          </h2>
+          <p className="mt-5 max-w-lg text-white/70 md:text-lg">
+            Each card comes from a real source — a Todoist task, a Gmail thread, a Calendar event.
+            OneThing picks the order. You pick the direction.
+          </p>
+          <ul className="mt-8 space-y-3 text-white/70">
+            {(["right", "left", "down", "up"] as const).map((dir) => {
+              const m = SWIPE_META[dir];
+              return (
+                <li key={dir} className="flex items-center gap-3">
+                  <span
+                    className="flex h-9 w-9 items-center justify-center rounded-xl text-sm font-bold"
+                    style={{ backgroundColor: m.color + "20", color: m.color }}
+                  >
+                    <Arrow dir={dir} />
+                  </span>
+                  <span className="font-semibold text-white">{m.label}</span>
+                  <span className="text-white/50">— {demoActionHint(dir)}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        <DemoPhone />
+      </div>
+    </section>
+  );
+}
+
+function demoActionHint(dir: "right" | "left" | "down" | "up") {
+  switch (dir) {
+    case "right": return "adds to focus, stars in Gmail";
+    case "left":  return "reschedules to tomorrow";
+    case "down":  return "completes in Todoist, archives in Gmail";
+    case "up":    return "deletes, archives, removes from calendar";
+  }
+}
+
+function DemoPhone() {
+  return (
+    <div className="relative mx-auto">
+      <div className="absolute -inset-10 -z-10 rounded-[4rem] bg-gradient-to-br from-[#7B61FF]/25 via-transparent to-[#00D1C1]/20 blur-3xl" />
+
+      <div className="relative h-[640px] w-[320px] rounded-[3rem] border border-white/15 bg-[#05050A] p-3 shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9)]">
+        {/* Screen */}
+        <div className="relative h-full w-full overflow-hidden rounded-[2.3rem] bg-gradient-to-b from-[#0A0A10] to-[#141420]">
+          {/* Notch */}
+          <div className="absolute left-1/2 top-0 z-30 h-6 w-28 -translate-x-1/2 rounded-b-2xl bg-[#05050A]" />
+
+          {/* Status bar */}
+          <div className="relative z-20 flex items-center justify-between px-6 pt-3 text-[10px] font-semibold text-white/70">
+            <span>9:41</span>
+            <span className="flex items-center gap-1">
+              <span className="h-2 w-2 rounded-full bg-white/70" />
+              <span className="h-2 w-3 rounded-sm bg-white/70" />
+              <span className="h-2.5 w-5 rounded-sm border border-white/70" />
+            </span>
+          </div>
+
+          {/* App header */}
+          <div className="relative z-20 flex items-center justify-between px-5 pt-6">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#7B61FF]">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 12h8M4 7h12M4 17h6" stroke="white" strokeWidth="2.6" strokeLinecap="round" />
+                </svg>
+              </span>
+              <span className="text-xs font-bold tracking-wide">Focus</span>
+            </div>
+            <div className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-white/50">
+              Swipe / Tiles
+            </div>
+          </div>
+
+          {/* Card stack area */}
+          <div className="relative mt-6 flex h-[400px] items-start justify-center px-4">
+            {/* Background static cards for depth */}
+            <div className="absolute inset-x-8 top-4 h-[360px] rounded-[1.5rem] border border-white/5 bg-white/[0.02]" />
+            <div className="absolute inset-x-6 top-2 h-[360px] rounded-[1.5rem] border border-white/10 bg-white/[0.04]" />
+
+            {/* Directional glows */}
+            {(["right", "left", "down", "up"] as const).map((dir) => (
+              <div
+                key={"glow-" + dir}
+                className="demo-hint pointer-events-none absolute inset-x-4 top-0 h-[360px] rounded-[1.5rem] blur-2xl"
+                style={{
+                  animationName: SWIPE_META[dir].glowAnim,
+                  backgroundColor: SWIPE_META[dir].color,
+                  opacity: 0,
+                  mixBlendMode: "screen",
+                }}
+              />
+            ))}
+
+            {/* Active swiping cards */}
+            {DEMO_CARDS.map((card, i) => (
+              <DemoCardView key={i} card={card} />
+            ))}
+
+            {/* Hint overlays */}
+            {(["right", "left", "down", "up"] as const).map((dir) => {
+              const m = SWIPE_META[dir];
+              return (
+                <div
+                  key={"hint-" + dir}
+                  className="demo-hint pointer-events-none absolute top-[38%] z-20 rounded-full px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.18em]"
+                  style={{
+                    animationName: m.hintAnim,
+                    backgroundColor: m.color,
+                    color: "#0A0A10",
+                    boxShadow: `0 0 40px ${m.color}`,
+                    opacity: 0,
+                    left: dir === "right" ? "auto" : dir === "left" ? "12%" : "50%",
+                    right: dir === "right" ? "12%" : "auto",
+                    top: dir === "down" ? "78%" : dir === "up" ? "8%" : "38%",
+                    transform: dir === "down" || dir === "up" ? "translateX(-50%)" : undefined,
+                  }}
+                >
+                  {m.label}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bottom nav */}
+          <div className="absolute inset-x-0 bottom-0 z-20 border-t border-white/5 bg-black/40 px-4 py-3 backdrop-blur">
+            <div className="flex items-center justify-around text-[10px] text-white/50">
+              {["Focus", "List", "Day", "Universe", "Settings"].map((t, i) => (
+                <span
+                  key={t}
+                  className={
+                    i === 0
+                      ? "flex flex-col items-center gap-0.5 text-[#7B61FF]"
+                      : "flex flex-col items-center gap-0.5"
+                  }
+                >
+                  <span
+                    className="h-1 w-1 rounded-full"
+                    style={{ backgroundColor: i === 0 ? "#7B61FF" : "transparent" }}
+                  />
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DemoCardView({ card }: { card: DemoCard }) {
+  const m = SWIPE_META[card.swipe];
+  return (
+    <div
+      className="demo-card absolute inset-x-4 top-0 z-10 flex h-[360px] flex-col rounded-[1.5rem] border border-white/15 bg-gradient-to-br from-[#1C1C2E] via-[#141420] to-[#0A0A10] p-5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]"
+      style={{ animationName: m.anim }}
+    >
+      <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-widest text-white/60">
+        <span className="flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: card.sourceColor }} />
+          {card.source}
+        </span>
+        <span>Score {card.score}</span>
+      </div>
+
+      <div className="mt-4 text-[17px] font-bold leading-tight">{card.title}</div>
+      <div className="mt-2 text-xs text-white/60">{card.body}</div>
+
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {card.chips.map((c) => (
+          <span
+            key={c.label}
+            className="rounded-full border px-2 py-0.5 text-[10px] font-semibold"
+            style={{ borderColor: c.color + "55", color: c.color, backgroundColor: c.color + "15" }}
+          >
+            {c.label}
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-auto flex items-center justify-between text-[9px] uppercase tracking-wider text-white/30">
+        <span className="flex items-center gap-1"><Arrow dir="left" /> Later</span>
+        <span className="flex items-center gap-1"><Arrow dir="down" /> Done</span>
+        <span className="flex items-center gap-1">Do now <Arrow dir="right" /></span>
       </div>
     </div>
   );
