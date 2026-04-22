@@ -1,3 +1,5 @@
+import { Waitlist } from "./waitlist";
+
 const APP_URL = "https://1thing.day";
 
 export default function Home() {
@@ -67,26 +69,15 @@ function Hero() {
           hands you the single most important thing to do right now. Swipe it. Move on.
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center gap-3">
-          <a
-            href={APP_URL}
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#7B61FF] px-6 py-3 text-base font-bold text-white shadow-[0_10px_40px_-10px_rgba(123,97,255,0.9)] transition hover:shadow-[0_10px_60px_-5px_rgba(123,97,255,1)]"
-          >
-            Try OneThing
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="transition group-hover:translate-x-0.5">
-              <path d="M5 12h14m0 0-5-5m5 5-5 5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </a>
-          <a
-            href="#how"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-base font-semibold text-white/80 transition hover:border-white/30 hover:text-white"
-          >
-            How it works
-          </a>
+        <div className="mt-10">
+          <Waitlist />
         </div>
 
-        <div className="mt-10 flex items-center gap-6 text-sm text-white/50">
+        <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-white/50">
           <Tick /> No feeds. No streaks. No nagging.
+          <a href="#how" className="underline-offset-4 hover:text-white hover:underline">
+            How it works
+          </a>
         </div>
       </div>
 
@@ -588,18 +579,10 @@ function FinalCta() {
             Open OneThing on your phone or laptop. Two minutes later your head is clearer than it's
             been all week.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a
-              href={APP_URL}
-              className="inline-flex items-center gap-2 rounded-full bg-[#7B61FF] px-7 py-3.5 text-base font-bold text-white shadow-[0_10px_40px_-10px_rgba(123,97,255,0.9)] transition hover:shadow-[0_10px_60px_-5px_rgba(123,97,255,1)]"
-            >
-              Open the app
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12h14m0 0-5-5m5 5-5 5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-            <span className="text-sm text-white/50">Web today. iOS & Android soon.</span>
+          <div className="mt-8">
+            <Waitlist />
           </div>
+          <p className="mt-4 text-sm text-white/50">Web today. iOS & Android soon.</p>
         </div>
       </div>
     </section>
