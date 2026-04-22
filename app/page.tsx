@@ -1,4 +1,4 @@
-const APP_URL = "https://onething-liard.vercel.app";
+const APP_URL = "https://1thing.day";
 
 export default function Home() {
   return (
