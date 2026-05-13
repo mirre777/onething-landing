@@ -593,9 +593,11 @@ function Footer() {
   return (
     <footer className="relative z-10 mx-auto flex max-w-6xl flex-col gap-3 px-6 pb-10 pt-6 text-sm text-white/40 md:flex-row md:items-center md:justify-between">
       <div>OneThing — made for people with too many tabs open.</div>
-      <div className="flex gap-5">
+      <div className="flex flex-wrap gap-5">
         <a href={APP_URL} className="hover:text-white/80">App</a>
         <a href="#how" className="hover:text-white/80">How it works</a>
+        <a href="https://1thing.day/privacy" className="hover:text-white/80">Privacy</a>
+        <a href="https://1thing.day/terms" className="hover:text-white/80">Terms</a>
       </div>
     </footer>
   );
