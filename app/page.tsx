@@ -1,5 +1,3 @@
-import { Waitlist } from "./waitlist";
-
 const APP_URL = "https://1thing.day";
 
 export default function Home() {
@@ -69,15 +67,24 @@ function Hero() {
           hands you the single most important thing to do right now. Swipe it. Move on.
         </p>
 
-        <div className="mt-10">
-          <Waitlist />
-        </div>
-
-        <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-white/50">
-          <Tick /> No feeds. No streaks. No nagging.
-          <a href="#how" className="underline-offset-4 hover:text-white hover:underline">
+        <div className="mt-10 flex flex-wrap items-center gap-3">
+          <a
+            href={APP_URL}
+            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-extrabold text-[#0A0A10] shadow-[0_0_40px_rgba(255,255,255,0.25)] transition hover:scale-[1.02] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)]"
+          >
+            Open OneThing
+            <Arrow dir="right" />
+          </a>
+          <a
+            href="#how"
+            className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-white/30 hover:text-white"
+          >
             How it works
           </a>
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center gap-2 text-sm text-white/50">
+          <Tick /> No feeds. No streaks. No nagging.
         </div>
       </div>
 
@@ -413,16 +420,19 @@ function HowItWorks() {
       n: "01",
       title: "Connect your sources",
       body: "Todoist, Gmail, Google Calendar. One tap each. Your data stays yours — no noisy feeds, no reshuffling.",
+      visual: <SourcesVisual />,
     },
     {
       n: "02",
       title: "AI scores everything",
       body: "Claude ranks every task, email, and event by urgency × importance × effort. You see one card: the top one.",
+      visual: <ScoringVisual />,
     },
     {
       n: "03",
       title: "Swipe. That's it.",
       body: "Right to do now, left for tomorrow, down to complete, up to delete. Double-tap to break a task into subtasks.",
+      visual: <SwipeVisual />,
     },
   ];
   return (
@@ -431,19 +441,104 @@ function HowItWorks() {
       <h2 className="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight md:text-5xl">
         Three steps between you and the <span className="text-[#00D1C1]">next right thing</span>.
       </h2>
-      <div className="mt-14 grid gap-6 md:grid-cols-3">
-        {steps.map((s) => (
-          <div
-            key={s.n}
-            className="group rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-7 transition hover:border-[#7B61FF]/40 hover:bg-white/[0.05]"
-          >
-            <div className="font-mono text-sm text-[#7B61FF]">{s.n}</div>
-            <div className="mt-4 text-xl font-bold">{s.title}</div>
-            <p className="mt-3 text-white/60">{s.body}</p>
+
+      <div className="relative mt-16">
+        {/* Connection line — only on md+ */}
+        <div className="pointer-events-none absolute left-[16.66%] right-[16.66%] top-[64px] hidden md:block">
+          <div className="relative h-px w-full overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#7B61FF]/0 via-[#7B61FF]/60 to-[#7B61FF]/0" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#A855F7]/40 to-transparent" />
+            <div className="connection-flow absolute -inset-y-[3px] h-[7px] w-24 rounded-full bg-gradient-to-r from-transparent via-[#00D1C1] to-transparent blur-[2px]" />
           </div>
-        ))}
+          {/* Connection nodes (dots above line at each step center) */}
+          <div className="absolute left-0 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7B61FF] shadow-[0_0_12px_#7B61FF]" />
+          <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#A855F7] shadow-[0_0_12px_#A855F7]" />
+          <div className="absolute right-0 top-1/2 h-2 w-2 translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00D1C1] shadow-[0_0_12px_#00D1C1]" />
+        </div>
+
+        <div className="grid gap-12 md:grid-cols-3 md:gap-6">
+          {steps.map((s) => (
+            <div key={s.n} className="relative flex flex-col items-center text-center">
+              <div className="relative flex h-[128px] w-[128px] items-center justify-center">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#7B61FF]/25 via-transparent to-[#00D1C1]/20 blur-2xl" />
+                <div className="relative flex h-28 w-28 items-center justify-center rounded-full border border-white/15 bg-gradient-to-br from-[#1C1C2E] via-[#141420] to-[#0A0A10] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)]">
+                  {s.visual}
+                </div>
+              </div>
+
+              <div className="mt-6 font-mono text-sm text-[#7B61FF]">{s.n}</div>
+              <div className="mt-2 text-xl font-bold">{s.title}</div>
+              <p className="mt-3 max-w-xs text-white/60">{s.body}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
+  );
+}
+
+function SourcesVisual() {
+  // Three stacked source chips with their brand dots
+  const srcs = [
+    { name: "Todoist", color: "#F47D31" },
+    { name: "Gmail", color: "#FF6B6B" },
+    { name: "Calendar", color: "#00D1C1" },
+  ];
+  return (
+    <div className="flex flex-col gap-1.5">
+      {srcs.map((s, i) => (
+        <div
+          key={s.name}
+          className="flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.04] px-2 py-1"
+          style={{ animation: `source-pop 4s ${i * 0.2}s ease-in-out infinite` }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color, boxShadow: `0 0 6px ${s.color}` }} />
+          <span className="text-[9px] font-semibold tracking-wide text-white/80">{s.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ScoringVisual() {
+  // Stacked tiny cards with score numbers — top one glows
+  return (
+    <div className="relative h-16 w-16">
+      <div className="absolute left-1 top-3 h-10 w-14 rounded-md border border-white/10 bg-white/[0.04]" />
+      <div className="absolute left-0 top-1.5 h-10 w-14 rounded-md border border-white/15 bg-white/[0.06]" />
+      <div className="absolute left-[-2px] top-0 h-10 w-14 rounded-md border border-[#A855F7]/40 bg-gradient-to-br from-[#1C1C2E] to-[#0A0A10] shadow-[0_0_16px_rgba(168,85,247,0.4)]">
+        <div className="flex h-full flex-col justify-between p-1.5">
+          <div className="flex items-center justify-between text-[7px] font-bold uppercase tracking-wider text-white/50">
+            <span className="flex items-center gap-0.5">
+              <span className="h-1 w-1 rounded-full bg-[#F47D31]" />
+              top
+            </span>
+          </div>
+          <div className="text-[13px] font-extrabold leading-none text-[#00D1C1]">94</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SwipeVisual() {
+  // Mini card with directional arrows on four sides
+  return (
+    <div className="relative flex h-16 w-16 items-center justify-center">
+      <div className="absolute left-1/2 top-0 -translate-x-1/2 text-[#FF6B6B]/70" style={{ animation: "swipe-hint-up 3.2s ease-in-out infinite" }}>
+        <Arrow dir="up" />
+      </div>
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 text-[#F47D31]/70" style={{ animation: "swipe-hint-left 3.2s 0.8s ease-in-out infinite" }}>
+        <Arrow dir="left" />
+      </div>
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[#00D1C1]/80" style={{ animation: "swipe-hint-right 3.2s 1.6s ease-in-out infinite" }}>
+        <Arrow dir="right" />
+      </div>
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[#7B61FF]/70" style={{ animation: "swipe-hint-down 3.2s 2.4s ease-in-out infinite" }}>
+        <Arrow dir="down" />
+      </div>
+      <div className="relative h-9 w-7 rounded-md border border-white/20 bg-gradient-to-br from-[#1C1C2E] to-[#0A0A10] shadow-[0_4px_12px_rgba(0,0,0,0.6)]" />
+    </div>
   );
 }
 
@@ -454,36 +549,42 @@ function Features() {
       tag: "Brain dump",
       body: "Tap the mic. Talk, don't think. OneThing figures out if you're creating tasks, asking a question, or just venting — then acts.",
       color: "#FF6B6B",
+      visual: <RambleMini />,
     },
     {
       title: "Focus tiles",
       tag: "After triage",
       body: "Your DO NOW items as a glowing grid. Pick one, finish it, tap done. Nothing else on screen to distract.",
       color: "#00D1C1",
+      visual: <FocusTilesMini />,
     },
     {
       title: "Chat coach",
       tag: "With 19 tools",
       body: "Open any card into a chat drawer. Claude edits tasks, sends emails, schedules events — all while coaching you through it.",
       color: "#7B61FF",
+      visual: <ChatCoachMini />,
     },
     {
       title: "Universe view",
       tag: "Life areas",
       body: "A force-directed bubble map of everything you're juggling. See where your attention is really going.",
       color: "#A855F7",
+      visual: <UniverseMini />,
     },
     {
       title: "Personal memory",
       tag: "Learns you",
       body: "Scans your recent data overnight and remembers contacts, routines, and what makes you procrastinate.",
       color: "#F47D31",
+      visual: <MemoryMini />,
     },
     {
       title: "Weekly review",
       tag: "Every Friday",
       body: "AI writes you a one-page summary of the week: wins, patterns, and the three things worth carrying forward.",
       color: "#7B61FF",
+      visual: <WeeklyReviewMini />,
     },
   ];
 
@@ -498,20 +599,35 @@ function Features() {
         {items.map((f) => (
           <div
             key={f.title}
-            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/20"
+            className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] transition hover:border-white/20"
           >
             <div
               className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-30 blur-3xl transition group-hover:opacity-60"
               style={{ backgroundColor: f.color }}
             />
+
+            {/* Visual preview */}
             <div
-              className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-widest"
-              style={{ borderColor: f.color + "55", color: f.color }}
+              className="relative h-[180px] overflow-hidden border-b border-white/5"
+              style={{
+                background: `linear-gradient(135deg, ${f.color}10 0%, transparent 60%), radial-gradient(ellipse at top right, ${f.color}18, transparent 65%)`,
+              }}
             >
-              {f.tag}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {f.visual}
+              </div>
             </div>
-            <div className="mt-4 text-xl font-bold">{f.title}</div>
-            <p className="mt-2 text-white/60">{f.body}</p>
+
+            <div className="relative p-6">
+              <div
+                className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-widest"
+                style={{ borderColor: f.color + "55", color: f.color }}
+              >
+                {f.tag}
+              </div>
+              <div className="mt-4 text-xl font-bold">{f.title}</div>
+              <p className="mt-2 text-white/60">{f.body}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -519,42 +635,345 @@ function Features() {
   );
 }
 
-function SwipeMap() {
-  const rows = [
-    { dir: "Right", icon: "→", label: "Do now", tone: "#00D1C1", body: "Added to focus tiles. Starred in Gmail. Kept on today's calendar." },
-    { dir: "Left", icon: "←", label: "Later", tone: "#F47D31", body: "Rescheduled tomorrow in Todoist. Snoozed in Gmail." },
-    { dir: "Down", icon: "↓", label: "Done", tone: "#7B61FF", body: "Completed in Todoist. Archived in Gmail." },
-    { dir: "Up", icon: "↑", label: "Delete", tone: "#FF6B6B", body: "Removed from Todoist. Archived in Gmail. Deleted from Calendar." },
+function RambleMini() {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#A855F7] shadow-[0_0_30px_rgba(255,107,107,0.5)]">
+        <div className="absolute inset-0 rounded-full bg-[#FF6B6B] opacity-40" style={{ animation: "mic-pulse 1.8s ease-in-out infinite" }} />
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="relative z-10 text-white">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" fill="currentColor" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <line x1="12" x2="12" y1="19" y2="22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </div>
+      <div className="flex items-end gap-0.5">
+        {[14, 28, 42, 22, 36, 18, 32, 24, 12, 30, 20].map((h, i) => (
+          <span
+            key={i}
+            className="w-[3px] rounded-full bg-gradient-to-t from-[#FF6B6B] to-[#A855F7]"
+            style={{
+              height: `${h}px`,
+              animation: `wave 1.2s ${i * 0.07}s ease-in-out infinite`,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FocusTilesMini() {
+  const tiles = [
+    { label: "Q2 deck", color: "#00D1C1", lit: true },
+    { label: "Email mum", color: "#7B61FF", lit: false },
+    { label: "Standup", color: "#F47D31", lit: false },
+    { label: "Review PR", color: "#A855F7", lit: true },
   ];
   return (
+    <div className="grid grid-cols-2 gap-2">
+      {tiles.map((t, i) => (
+        <div
+          key={t.label}
+          className="flex h-14 w-20 items-center justify-center rounded-xl border text-[10px] font-bold"
+          style={{
+            borderColor: t.color + (t.lit ? "AA" : "30"),
+            backgroundColor: t.color + (t.lit ? "25" : "08"),
+            color: t.lit ? "#fff" : t.color + "AA",
+            boxShadow: t.lit ? `0 0 20px ${t.color}55, inset 0 0 12px ${t.color}25` : "none",
+            animation: `tile-glow 3s ${i * 0.4}s ease-in-out infinite`,
+          }}
+        >
+          {t.label}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ChatCoachMini() {
+  return (
+    <div className="flex w-full max-w-[240px] flex-col gap-1.5">
+      <div className="self-end rounded-2xl rounded-tr-sm bg-white/10 px-3 py-1.5 text-[10px] text-white/80">
+        Help me get unstuck.
+      </div>
+      <div className="self-start rounded-2xl rounded-tl-sm bg-[#7B61FF]/20 px-3 py-1.5 text-[10px] text-white/90">
+        Splitting into 3 subtasks…
+      </div>
+      <div className="mt-1 flex gap-1.5 self-start">
+        <span className="rounded-full border border-[#7B61FF]/40 bg-[#7B61FF]/10 px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#7B61FF]">
+          edit task
+        </span>
+        <span className="rounded-full border border-[#00D1C1]/40 bg-[#00D1C1]/10 px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#00D1C1]">
+          send email
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function UniverseMini() {
+  const nodes = [
+    { x: 50, y: 30, r: 14, color: "#A855F7", label: "Work" },
+    { x: 22, y: 60, r: 10, color: "#00D1C1", label: "Home" },
+    { x: 78, y: 62, r: 12, color: "#F47D31", label: "Family" },
+    { x: 38, y: 88, r: 8, color: "#FF6B6B", label: "Health" },
+    { x: 66, y: 90, r: 7, color: "#7B61FF" },
+  ];
+  return (
+    <svg viewBox="0 0 100 110" className="h-[140px] w-[180px]">
+      {/* Connection lines */}
+      <line x1="50" y1="30" x2="22" y2="60" stroke="#ffffff20" strokeWidth="0.5" />
+      <line x1="50" y1="30" x2="78" y2="62" stroke="#ffffff20" strokeWidth="0.5" />
+      <line x1="22" y1="60" x2="38" y2="88" stroke="#ffffff20" strokeWidth="0.5" />
+      <line x1="78" y1="62" x2="66" y2="90" stroke="#ffffff20" strokeWidth="0.5" />
+      <line x1="38" y1="88" x2="66" y2="90" stroke="#ffffff20" strokeWidth="0.5" />
+      {nodes.map((n, i) => (
+        <g key={i} style={{ animation: `bubble-drift 6s ${i * 0.5}s ease-in-out infinite`, transformOrigin: `${n.x}px ${n.y}px` }}>
+          <circle cx={n.x} cy={n.y} r={n.r + 2} fill={n.color} opacity="0.15" />
+          <circle cx={n.x} cy={n.y} r={n.r} fill={n.color} opacity="0.55" />
+          {n.label && (
+            <text x={n.x} y={n.y + 1} textAnchor="middle" fontSize="4" fontWeight="700" fill="#fff">
+              {n.label}
+            </text>
+          )}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function MemoryMini() {
+  const facts = [
+    { label: "Mum → Sundays only", color: "#F47D31" },
+    { label: "Standup at 10:00", color: "#00D1C1" },
+    { label: "Procrastinates on decks", color: "#A855F7" },
+  ];
+  return (
+    <div className="flex flex-col gap-1.5">
+      {facts.map((f, i) => (
+        <div
+          key={f.label}
+          className="flex items-center gap-2 rounded-md border border-white/10 bg-white/[0.05] px-2.5 py-1.5 backdrop-blur"
+          style={{ animation: `fact-fade 4s ${i * 0.3}s ease-in-out infinite` }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: f.color, boxShadow: `0 0 6px ${f.color}` }} />
+          <span className="text-[10px] font-medium text-white/85">{f.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function WeeklyReviewMini() {
+  return (
+    <div className="relative h-[140px] w-[110px] rounded-md border border-white/15 bg-gradient-to-br from-[#1C1C2E] to-[#0A0A10] p-2.5 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.6)]">
+      <div className="flex items-center justify-between text-[7px] font-bold uppercase tracking-wider text-[#7B61FF]">
+        <span>Week 19</span>
+        <span className="text-white/30">Fri</span>
+      </div>
+      <div className="mt-1.5 text-[9px] font-extrabold leading-tight text-white">Your week, summed</div>
+      <div className="mt-2 space-y-1">
+        <div className="flex items-center gap-1">
+          <span className="h-1 w-1 rounded-full bg-[#00D1C1]" />
+          <span className="h-[3px] w-12 rounded-full bg-white/40" />
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="h-1 w-1 rounded-full bg-[#00D1C1]" />
+          <span className="h-[3px] w-16 rounded-full bg-white/40" />
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="h-1 w-1 rounded-full bg-[#F47D31]" />
+          <span className="h-[3px] w-10 rounded-full bg-white/30" />
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="h-1 w-1 rounded-full bg-[#F47D31]" />
+          <span className="h-[3px] w-14 rounded-full bg-white/30" />
+        </div>
+      </div>
+      <div className="mt-2 border-t border-white/10 pt-1.5">
+        <div className="text-[6px] font-bold uppercase tracking-wider text-[#7B61FF]/80">Carry forward</div>
+        <div className="mt-1 space-y-0.5">
+          <span className="block h-[3px] w-full rounded-full bg-white/30" />
+          <span className="block h-[3px] w-3/4 rounded-full bg-white/30" />
+          <span className="block h-[3px] w-2/3 rounded-full bg-white/30" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SwipeMap() {
+  const outputs = [
+    {
+      kind: "Task",
+      kindColor: "#F47D31",
+      title: "Call mum about Sunday",
+      meta: "Todoist · personal",
+      chips: [{ label: "personal", color: "#00D1C1" }, { label: "today", color: "#FF6B6B" }],
+    },
+    {
+      kind: "Task",
+      kindColor: "#F47D31",
+      title: "Finish Q2 deck",
+      meta: "Todoist · work · 2h",
+      chips: [{ label: "deep focus", color: "#A855F7" }, { label: "deadline", color: "#7B61FF" }],
+    },
+    {
+      kind: "Email draft",
+      kindColor: "#FF6B6B",
+      title: "Re: Thursday meeting — Pieter",
+      meta: "Gmail · draft ready",
+      chips: [{ label: "ready to send", color: "#00D1C1" }],
+    },
+  ];
+
+  return (
     <section className="relative z-10 mx-auto max-w-6xl px-6 py-24">
-      <SectionLabel>One gesture, four outcomes</SectionLabel>
+      <SectionLabel>Just talk</SectionLabel>
       <h2 className="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight md:text-5xl">
-        Every swipe writes back to the source.
+        Ramble it out. We turn it into <span className="bg-gradient-to-r from-[#FF6B6B] to-[#A855F7] bg-clip-text text-transparent">cards</span>.
       </h2>
       <p className="mt-4 max-w-2xl text-white/60">
-        No duplicate to-do lists to maintain. OneThing isn't a new place to put things. It's a new
-        way to move through what you already have.
+        Tap the mic and say what's in your head. OneThing figures out what's a task, what's an email
+        to draft, what's just venting — then makes the cards. No typing. No structuring. Just talk.
       </p>
 
-      <div className="mt-12 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02]">
-        {rows.map((r, i) => (
-          <div
-            key={r.dir}
-            className={`grid grid-cols-[72px_1fr] items-center gap-5 p-5 md:grid-cols-[90px_200px_1fr] md:p-6 ${
-              i !== rows.length - 1 ? "border-b border-white/5" : ""
-            }`}
-          >
-            <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl text-2xl font-bold md:h-16 md:w-16"
-              style={{ backgroundColor: r.tone + "20", color: r.tone }}
-            >
-              {r.icon}
+      <div className="relative mt-16 grid items-center gap-10 md:grid-cols-[1fr_auto_1fr] md:gap-6">
+        {/* Left — Ramble sheet */}
+        <div className="relative mx-auto w-full max-w-[360px]">
+          <div className="absolute -inset-6 -z-10 rounded-[3rem] bg-gradient-to-br from-[#FF6B6B]/20 via-transparent to-[#A855F7]/20 blur-3xl" />
+
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-gradient-to-br from-[#1C1C2E] via-[#141420] to-[#0A0A10] p-5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold uppercase tracking-widest text-white/60">Ramble</span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded-full border border-[#FF6B6B]/40 bg-[#FF6B6B]/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B6B]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B6B]" style={{ animation: "mic-pulse 1.4s ease-in-out infinite" }} />
+                rec
+              </div>
             </div>
-            <div className="font-bold text-lg md:text-xl">{r.label}</div>
-            <div className="col-span-2 text-white/60 md:col-span-1">{r.body}</div>
+
+            {/* Waveform */}
+            <div className="mt-6 flex h-16 items-end justify-center gap-[3px]">
+              {[18, 32, 50, 26, 44, 22, 56, 38, 48, 28, 42, 30, 52, 24, 36, 20, 46, 34, 40, 26].map((h, i) => (
+                <span
+                  key={i}
+                  className="w-[3px] rounded-full bg-gradient-to-t from-[#FF6B6B] via-[#A855F7] to-[#7B61FF]"
+                  style={{
+                    height: `${h}px`,
+                    animation: `wave 1.4s ${i * 0.05}s ease-in-out infinite`,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Live transcript */}
+            <div className="mt-6 space-y-2 text-sm leading-relaxed text-white/85">
+              <p>
+                <span className="text-white/50">"Okay so</span> I need to call mum back about Sunday,
+                <span className="text-white/50"> and</span> finish the Q2 deck today<span className="text-white/50">,</span>
+              </p>
+              <p>
+                also email Pieter about the Thursday meeting<span className="text-white/50">,</span>
+                <span className="text-white/40"> ugh I always forget that one</span><span className="text-white/50">…"</span>
+              </p>
+            </div>
+
+            <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-white/40">0:14</span>
+              <span className="rounded-full bg-[#7B61FF] px-4 py-1.5 text-xs font-bold text-white shadow-[0_0_24px_rgba(123,97,255,0.6)]">
+                Sort it
+              </span>
+            </div>
           </div>
-        ))}
+        </div>
+
+        {/* Middle — animated connector */}
+        <div className="relative flex h-full items-center justify-center">
+          {/* Horizontal arrow (md+) */}
+          <div className="relative hidden h-px w-24 md:block">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#FF6B6B]/40 via-[#A855F7] to-[#00D1C1]/40" />
+            <div className="connection-flow absolute -inset-y-[3px] h-[7px] w-12 rounded-full bg-gradient-to-r from-transparent via-[#00D1C1] to-transparent blur-[2px]" />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="absolute -right-2 -top-[7px] text-[#00D1C1]">
+              <path d="M5 12h14m0 0-5-5m5 5-5 5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          {/* Vertical arrow on mobile */}
+          <div className="flex flex-col items-center gap-2 md:hidden">
+            <div className="h-12 w-px bg-gradient-to-b from-[#FF6B6B]/40 via-[#A855F7] to-[#00D1C1]/40" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-[#00D1C1]" style={{ transform: "rotate(90deg)" }}>
+              <path d="M5 12h14m0 0-5-5m5 5-5 5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Right — output cards */}
+        <div className="relative mx-auto w-full max-w-[380px] space-y-3">
+          <div className="absolute -inset-6 -z-10 rounded-[3rem] bg-gradient-to-br from-[#00D1C1]/20 via-transparent to-[#7B61FF]/20 blur-3xl" />
+
+          {outputs.map((c, i) => (
+            <div
+              key={c.title}
+              className="relative rounded-2xl border border-white/15 bg-gradient-to-br from-[#1C1C2E] via-[#141420] to-[#0A0A10] p-4 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.7)]"
+              style={{
+                animation: `card-arrive 4s ${i * 0.5}s ease-out infinite`,
+                opacity: 0,
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-white/60">
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: c.kindColor, boxShadow: `0 0 6px ${c.kindColor}` }} />
+                  {c.kind}
+                </span>
+                <span className="text-[9px] uppercase tracking-widest text-white/30">from ramble</span>
+              </div>
+
+              <div className="mt-2 text-sm font-bold leading-tight">{c.title}</div>
+              <div className="mt-1 text-[11px] text-white/50">{c.meta}</div>
+
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {c.chips.map((chip) => (
+                  <span
+                    key={chip.label}
+                    className="rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider"
+                    style={{ borderColor: chip.color + "55", color: chip.color, backgroundColor: chip.color + "12" }}
+                  >
+                    {chip.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Below — the four swipe actions, compact */}
+      <div className="mt-20">
+        <div className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">And every swipe writes back to the source</div>
+        <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+          {[
+            { dir: "right" as const, label: "Do now", tone: "#00D1C1", body: "Focus tiles · Starred · Kept on calendar" },
+            { dir: "left" as const,  label: "Later",  tone: "#F47D31", body: "Rescheduled · Snoozed in Gmail" },
+            { dir: "down" as const,  label: "Done",   tone: "#7B61FF", body: "Completed · Archived" },
+            { dir: "up" as const,    label: "Delete", tone: "#FF6B6B", body: "Removed · Archived · Cleared" },
+          ].map((r) => (
+            <div
+              key={r.label}
+              className="rounded-2xl border border-white/10 bg-white/[0.02] p-4"
+            >
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-xl"
+                style={{ backgroundColor: r.tone + "20", color: r.tone }}
+              >
+                <Arrow dir={r.dir} />
+              </div>
+              <div className="mt-3 text-sm font-bold">{r.label}</div>
+              <div className="mt-1 text-[11px] text-white/50">{r.body}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -580,7 +999,13 @@ function FinalCta() {
             been all week.
           </p>
           <div className="mt-8">
-            <Waitlist />
+            <a
+              href={APP_URL}
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-extrabold text-[#0A0A10] shadow-[0_0_50px_rgba(255,255,255,0.3)] transition hover:scale-[1.02] hover:shadow-[0_0_70px_rgba(255,255,255,0.45)]"
+            >
+              Open OneThing
+              <Arrow dir="right" />
+            </a>
           </div>
           <p className="mt-4 text-sm text-white/50">Web today. iOS & Android soon.</p>
         </div>
